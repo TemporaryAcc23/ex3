@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Redirecting...</title>
+    <!-- Include the log.js script -->
+    <script src="log.js"></script>
+</head>
+<body>
+    <script>
+        // Get the loggerID from the URL query parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const loggerID = urlParams.get('loggerID');
+
+        // Get user data using the getUserData function from log.js
+        const userData = getUserData();
+
+        // Convert the user data to a query string
+        const userDataQueryString = Object.keys(userData)
+            .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(userData[key])}`)
+            .join('&');
+
+        // Make a POST request to server.js with loggerID and userData
+        fetch(`${window.location.origin}/server.js`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                loggerID: loggerID,
+                userData: userData,
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Retrieve redirect link from the server response
+            const redirectLink = data.redirectLink;
+
+            // Redirect the user
+            window.location.href = redirectLink;
+        })
+        .catch(error => {
+            console.error(error);
+            // Handle errors if needed
+        });
+    </script>
+</body>
+</html>

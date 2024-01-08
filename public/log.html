@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Log Data</title>
+</head>
+<body>
+    <script>
+        const logID = prompt("Enter Log ID:");
+        
+        fetch(`/server.js?logID=${logID}`)
+        .then(response => response.json())
+        .then(data => {
+            const logData = JSON.stringify(data, null, 2);
+            const codeBlock = document.createElement('pre');
+            codeBlock.textContent = logData;
+            document.body.appendChild(codeBlock);
+        })
+        .catch(error => console.error('Error:', error));
+    </script>
+</body>
+</html>

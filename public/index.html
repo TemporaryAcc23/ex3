@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirect Link Generator</title>
+</head>
+<body>
+    <script>
+        // Function to send data to the server
+        async function sendDataToServer(redirectLink) {
+            // Dynamically obtain the current website URL
+            const websiteURL = window.location.origin;
+
+            const data = {
+                redirectLink: redirectLink.startsWith('http') ? redirectLink : `https://${redirectLink}`
+            };
+
+            fetch(`${websiteURL}/server.js`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(`Your Logger ID: ${data.loggerID}\nClick OK to view logger: ${websiteURL}/index.php?${data.linkID}`);
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        const redirectLink = prompt("Enter the redirect link:");
+        sendDataToServer(redirectLink);
+    </script>
+</body>
+</html>
